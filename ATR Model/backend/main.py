@@ -32,6 +32,31 @@ from .generative_qa import answer_with_context, paraphrase_succinct
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(APP_DIR)
+
+# Optional .env loader (no external deps). Loads ROOT_DIR/.env if present.
+def _load_dotenv_if_present():
+    env_path = os.path.join(ROOT_DIR, ".env")
+    try:
+        if os.path.isfile(env_path):
+            with open(env_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith('#'):
+                        continue
+                    if '=' not in line:
+                        continue
+                    key, value = line.split('=', 1)
+                    key = key.strip()
+                    # Strip optional surrounding quotes
+                    value = value.strip().strip('"').strip("'")
+                    # Do not overwrite existing env from the process
+                    if key and (os.getenv(key) is None):
+                        os.environ[key] = value
+    except Exception:
+        # Silent fail; env variables remain as-is
+        pass
+
+_load_dotenv_if_present()
 UPLOAD_DIR = os.path.join(ROOT_DIR, "uploads")
 RESPONSE_DIR = os.path.join(ROOT_DIR, "responses")
 PIPER_DIR = os.path.join(ROOT_DIR, "piper")

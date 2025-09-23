@@ -27,4 +27,16 @@ Notes
 - CORS: Ensure ALLOWED_ORIGINS includes your Pages/Static site URL(s).
 - Health check: /docs can serve as a simple health endpoint on Render.
 
+.env (optional for local/dev)
+- Create a file named .env in ATR Model/ (same folder as backend/):
+
+  PORT=8000
+  DISABLE_TTS=1
+  WHISPER_MODEL=base
+  ALLOWED_ORIGINS=http://127.0.0.1:5500,http://localhost:5500
+  SUPABASE_URL=your_supabase_project_url
+  SUPABASE_KEY=your_supabase_anon_public_key
+
+- The backend auto-loads ATR Model/.env at startup if present. On Render, set these as Environment Variables in the dashboard instead of using a file.
+
 
