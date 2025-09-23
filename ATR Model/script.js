@@ -36,7 +36,7 @@
     // API health polling
     async function pollHealth() {
         try {
-            const res = await fetchWithTimeout(API_BASE + '/progress', { method: 'GET' }, 15000);
+            const res = await fetchWithTimeout(API_BASE + '/progress', { method: 'GET' }, 30000);
             if (res && res.ok) {
                 apiStatusBadge && (apiStatusBadge.textContent = 'Online', apiStatusBadge.className = 'badge badge--ok');
             } else {
@@ -462,7 +462,7 @@
             const form = new FormData();
             const tid = (fileSelectQa && fileSelectQa.value) || (fileSelect && fileSelect.value) || '';
             if (tid) form.append('transcript_id', tid);
-            const res = await fetchWithTimeout(API_BASE + '/summarize-latest', { method: 'POST', body: form }, 15000);
+            const res = await fetchWithTimeout(API_BASE + '/summarize-latest', { method: 'POST', body: form }, 30000);
             const data = await res.json();
             if (res.ok) {
                 summaryBox.value = data.summary || '';
@@ -761,7 +761,7 @@
             if (tid) form.append('transcript_id', tid);
             const url = API_BASE + '/multiqa';
             console.log('[multiqa] POST', url);
-            const res = await fetchWithTimeout(url, { method: 'POST', body: form }, 15000);
+            const res = await fetchWithTimeout(url, { method: 'POST', body: form }, 30000);
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
             const items = data.items || [];
@@ -841,7 +841,7 @@
             if (tid) form.append('transcript_id', tid);
             const url = API_BASE + '/multiqa';
             console.log('[multiqa] POST', url);
-            const res = await fetchWithTimeout(url, { method: 'POST', body: form }, 15000);
+            const res = await fetchWithTimeout(url, { method: 'POST', body: form }, 30000);
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
             const items = data.items || [];
