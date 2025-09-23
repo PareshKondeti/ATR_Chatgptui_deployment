@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: atr-backend
+    env: docker
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: DISABLE_TTS
+        value: "1"
+      - key: WHISPER_MODEL
+        value: base
+      - key: ALLOWED_ORIGINS
+        sync: false
+    healthCheckPath: /docs
+
+
