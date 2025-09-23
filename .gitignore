@@ -1,0 +1,50 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+.env*/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Cache
+.cache/
+
+# OS files
+*.swp
+
+# Large assets
+ATR Model/models/
+ATR Model/piper/
+ATR Model/uploads/
+training_data/
+responses/
+*.onnx
+*.dll
+*.ort
+*.exe
+*.mp3
+*.m4a
+*.webm
+*.wav
+*.zip
+*.tar
+*.tar.gz
+*.7z
