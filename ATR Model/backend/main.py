@@ -94,6 +94,13 @@ training_state = TrainingState()
 @app.on_event("startup")
 async def startup_event():
     print("Starting ATR Model server...")
+    # Allow memory-constrained environments to skip heavy startup loading
+    skip_startup = (os.getenv("SKIP_STARTUP_LOAD", "0") or "0").strip().lower() in ("1", "true", "yes", "on")
+    if skip_startup:
+        print("SKIP_STARTUP_LOAD=1 detected: skipping Whisper/QA preload for low-memory deploys")
+        print("Server startup complete!")
+        return
+
     await _preload_whisper_model()
     
     # Try to load QA models if they exist
