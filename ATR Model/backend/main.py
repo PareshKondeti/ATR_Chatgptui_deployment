@@ -100,6 +100,11 @@ app.add_middleware(
 )
 
 training_state = TrainingState()
+# Silence favicon 404s from browsers
+@app.get("/favicon.ico")
+async def _favicon():
+    return JSONResponse(status_code=204, content=None)
+
 
 # Startup event to pre-load models
 @app.on_event("startup")
@@ -570,6 +575,11 @@ async def multiqa(
         return {"items": results}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+
+# Optional GET handler for diagnostics if some clients hit GET /multiqa
+@app.get("/multiqa")
+async def multiqa_get():
+    return JSONResponse(status_code=405, content={"error": "Use POST for /multiqa"})
 
 
 @app.post("/tts")
