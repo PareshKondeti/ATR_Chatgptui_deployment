@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node/Frontend caches
+node_modules/
+*.log
+
+# Large local assets and generated data
+uploads/
+responses/
+training_data/**
+!training_data/README*
+
+# Models and binaries (keep lightweight configs only)
+models/
+# Piper TTS binaries
+piper/*.exe
+piper/*.dll
+piper/*.onnx
+piper/*.ort
+piper/voices/**
+piper/espeak-ng-data/**
+!piper/*.json
+
+# Audio/video samples
+*.mp3
+*.wav
+*.webm
+*.m4a
+
+# IDE/Editor
+.vscode/
+.idea/
+
+# Build artifacts
+*.cache
+*.tmp
+*.bak
+
+# Supabase keys or local config (if any)
+.supabase/*
+
+# Python bytecode caches anywhere
+**/__pycache__/

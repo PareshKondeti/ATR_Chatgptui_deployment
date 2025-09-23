@@ -1,0 +1,44 @@
+Production-ready model options to improve summaries and QA (2–3 lines each)
+
+Current stack (baseline for comparison)
+- Summarization: facebook/bart-large-cnn (free). Solid, fast, but can miss cross-paragraph dependencies and long-context coherence.
+- QA: deepset/roberta-base-squad2 (free). Good extractive QA, but limited reasoning and no generative paraphrasing.
+
+Summarization / Generative (LLMs)
+- OpenAI GPT-4.1 or GPT-4o-mini (paid): Strong long-context coherence and faithful compression. Handles instruction nuance and avoids prompt echo; best for crisp, production summaries.
+- Anthropic Claude 3.5 Sonnet (paid): Excellent factual grounding and style control. Tends to preserve essential entities/timelines better than BART on longer transcripts.
+- Mistral Large (paid): Competitive reasoning with efficient tokens; good balance of quality and latency for summaries and short answers.
+- Cohere Command R+ (paid): Tuned for retrieval + summarization; concise and structurally consistent outputs that are easy to render in apps.
+- Meta Llama 3.1 70B Instruct (free weights; paid if hosted): Strong open-weight option with good instruction following; when paired with a reranker, produces high-quality multi-paragraph summaries.
+- Google Gemini 1.5 Pro (paid): Very long context; excels at stitching themes across long transcripts with minimal hallucination when prompted to cite.
+
+Open-weight summarization (smaller, on-device / self-host)
+- google/pegasus-large (free): Designed for abstractive summarization; more faithful than BART on news/lecture style inputs.
+- allenai/longformer-encoder-decoder-16384 (LED) (free): Handles very long transcripts natively; reduces chunking artifacts.
+- google/long-t5-tglobal-xl (free): Global attention improves topic continuity across long inputs compared to BART.
+
+QA / Generation for Answers (with context)
+- OpenAI GPT-4.1 / 4o-mini (paid): Strong at grounded, 2–3 line answers when provided top-k passages; robust citation and refusal behavior.
+- Anthropic Claude 3.5 Sonnet (paid): Very low hallucination rate in RAG; great at fusing multiple passages into a concise, direct answer.
+- Mistral Large (paid): Fast, compact answers; good at following formatting instructions for production UI.
+- Llama 3.1 70B Instruct (free weights): High-quality open alternative; with a good retrieval pipeline, yields competitive answers at lower cost.
+
+Embeddings (to improve retrieval quality)
+- OpenAI text-embedding-3-large (paid): High-accuracy semantic search and multilingual support; boosts recall and ranking.
+- jina-embeddings-v2-base-en (free): Strong open-source English embeddings; good drop-in for production RAG.
+- intfloat/e5-large-v2 (free): Performs well on retrieval tasks; easy to self-host with sentence-transformers.
+
+Rerankers (to improve context selection before summarization/QA)
+- Cohere Rerank-3 (paid): State-of-the-art reranking; consistently lifts answer quality by surfacing the most relevant chunks.
+- voyageai rerank-2 (paid): Strong accuracy/latency tradeoff; improves top-1 passage precision.
+- cross-encoder/ms-marco-MiniLM-L-6-v2 (free): Lightweight reranker that markedly improves relevance over pure embedding search.
+
+Why these are better than the current setup
+- Long-context fidelity: LED/Long-T5/Claude/GPT-4 class models keep themes intact across large transcripts, reducing chunk boundary artifacts seen with BART.
+- Faithful, concise answers: Modern LLMs trained for instruction follow produce 2–3 line, non-echoed answers with fewer artifacts than extractive RoBERTa.
+- Retrieval quality: Stronger embeddings + reranking consistently improve the passages fed to the generator, which directly improves summary and QA quality.
+
+Suggested pragmatic upgrades by tier
+- Free/self-host: LED or Long-T5 + e5-large-v2 embeddings + MiniLM reranker + Llama 3.1 70B (or 8B for latency) for generation.
+- Cost-efficient paid: GPT-4o-mini for generation/summaries + text-embedding-3-large + Cohere Rerank-3.
+- Premium quality: Claude 3.5 Sonnet or GPT-4.1 for generation + text-embedding-3-large + Cohere Rerank-3; enable citations.
