@@ -492,10 +492,25 @@
         summaryBox.value = ''; updateSummaryCount(); showToast('Cleared', 'ok');
     });
 
-    // Summary: Play via TTS
+    // Client-side TTS helper (SpeechSynthesis)
+    function speakText(text){
+        try {
+            if (!text || !window.speechSynthesis || typeof SpeechSynthesisUtterance === 'undefined') return false;
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate = 1.0; // default speed
+            u.pitch = 1.0;
+            u.volume = 1.0;
+            window.speechSynthesis.speak(u);
+            return true;
+        } catch(_) { return false; }
+    }
+
+    // Summary: Play via client-side TTS (fallback to backend if unavailable)
     summaryPlayBtn && summaryPlayBtn.addEventListener('click', async function(){
         const text = (summaryBox && summaryBox.value || '').trim();
         if (!text) return;
+        if (speakText(text)) return;
         try {
             const form = new FormData();
             form.append('text', text);
@@ -514,10 +529,11 @@
         } catch (e) { }
     });
 
-    // Multi Answer: Play via TTS
+    // Multi Answer: Play via client-side TTS (fallback to backend)
     multiAnswerPlayBtn && multiAnswerPlayBtn.addEventListener('click', async function(){
         const text = (multiCombinedAnswer && multiCombinedAnswer.value || '').trim();
         if (!text) return;
+        if (speakText(text)) return;
         try {
             const form = new FormData();
             form.append('text', text);
@@ -598,12 +614,13 @@
         const text = (target.getAttribute('data-text') || '').trim();
         if (!text) return;
         if (action === 'mini-play') {
-        try {
-            const form = new FormData();
+            if (speakText(text)) return;
+            try {
+                const form = new FormData();
                 form.append('text', text);
                 const res = await fetch(API_BASE + '/tts', { method: 'POST', body: form });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
                 if (data.audio_b64_wav) {
                     const wavBlob = b64ToBlob(data.audio_b64_wav, 'audio/wav');
                     const url = URL.createObjectURL(wavBlob);
