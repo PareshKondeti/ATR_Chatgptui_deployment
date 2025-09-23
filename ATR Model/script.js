@@ -1,6 +1,6 @@
 (function () {
-    // Central API base (match the running backend port)
-    const API_BASE = 'http://127.0.0.1:8000';
+    // Central API base (match the running backend URL)
+    const API_BASE = 'https://atr-chatgptui-deployment1.onrender.com';
     const apiStatusBadge = document.getElementById('apiStatusBadge');
     const themeToggle = document.getElementById('themeToggle');
     const ttsToggle = document.getElementById('ttsToggle');
