@@ -78,12 +78,23 @@ try:
 except Exception:
     pass
 
-# CORS: explicitly allow local frontend origins. Using credentials with '*' is invalid.
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://127.0.0.1:5500,http://localhost:5500").split(",")
+# CORS configuration
+_raw_allowed = (os.getenv("ALLOWED_ORIGINS", "http://127.0.0.1:5500,http://localhost:5500") or "").strip()
+_list_allowed = [o.strip() for o in _raw_allowed.split(",") if o.strip()]
+
+# Special-case wildcard: FastAPI expects ["*"] to allow any origin
+if len(_list_allowed) == 1 and _list_allowed[0] == "*":
+    _allow_origins = ["*"]
+else:
+    _allow_origins = _list_allowed
+
+# Optional credentials toggle via env (default off for simplicity)
+_allow_credentials = (os.getenv("ALLOW_CREDENTIALS", "0") or "0").strip().lower() in ("1", "true", "yes", "on")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o.strip() for o in allowed_origins if o.strip()],
-    allow_credentials=False,
+    allow_origins=_allow_origins,
+    allow_credentials=_allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
