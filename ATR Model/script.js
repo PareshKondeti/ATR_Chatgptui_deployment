@@ -3,6 +3,7 @@
     const API_BASE = 'http://127.0.0.1:8000';
     const apiStatusBadge = document.getElementById('apiStatusBadge');
     const themeToggle = document.getElementById('themeToggle');
+    const ttsToggle = document.getElementById('ttsToggle');
     const toastContainer = document.getElementById('toastContainer');
     // Cross-browser fetch with timeout helper
     async function fetchWithTimeout(url, options, timeoutMs) {
@@ -493,8 +494,13 @@
     });
 
     // Client-side TTS helper (SpeechSynthesis)
+    function isTtsEnabled(){
+        try { return localStorage.getItem('ttsEnabled') !== '0'; } catch(_) { return true; }
+    }
+
     function speakText(text){
         try {
+            if (!isTtsEnabled()) return false;
             if (!text || !window.speechSynthesis || typeof SpeechSynthesisUtterance === 'undefined') return false;
             window.speechSynthesis.cancel();
             const u = new SpeechSynthesisUtterance(text);
@@ -505,6 +511,19 @@
             return true;
         } catch(_) { return false; }
     }
+
+    // TTS toggle persistence
+    (function setupTtsToggle(){
+        if (!ttsToggle) return;
+        try {
+            const enabled = isTtsEnabled();
+            ttsToggle.checked = !!enabled;
+            ttsToggle.addEventListener('change', function(){
+                try { localStorage.setItem('ttsEnabled', this.checked ? '1' : '0'); } catch(_) {}
+                try { if (!this.checked && window.speechSynthesis) window.speechSynthesis.cancel(); } catch(_) {}
+            });
+        } catch(_) {}
+    })();
 
     // Summary: Play via client-side TTS (fallback to backend if unavailable)
     summaryPlayBtn && summaryPlayBtn.addEventListener('click', async function(){
