@@ -1,0 +1,17 @@
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+ATR[[:space:]]Model/uploads/** filter=lfs diff=lfs merge=lfs -text
+*.dll filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.tar filter=lfs diff=lfs merge=lfs -text
+ATR[[:space:]]Model/models/** filter=lfs diff=lfs merge=lfs -text
+responses/** filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+*.7z filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
+*.m4a filter=lfs diff=lfs merge=lfs -text
+*.webm filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text
+ATR[[:space:]]Model/piper/** filter=lfs diff=lfs merge=lfs -text
+training_data/** filter=lfs diff=lfs merge=lfs -text
+*.ort filter=lfs diff=lfs merge=lfs -text
