@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 COPY ["ATR Model/requirements.txt", "/app/requirements.txt"]
+# Reduce image size: preinstall minimal torch CPU (let pip resolve if needed)
+# If transformers/sentence-transformers pull torch, they will install the minimal CPU build automatically.
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy backend and static assets
