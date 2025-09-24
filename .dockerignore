@@ -1,0 +1,20 @@
+﻿*.pyc
+__pycache__/
+.venv/
+.env
+.DS_Store
+
+# Exclude large/local assets not needed in the image
+ATR Model/models/
+ATR Model/training_data/
+ATR Model/uploads/
+ATR Model/responses/
+ATR Model/piper/
+
+# VCS/editor
+.git/
+.vscode/
+.idea/
+
+node_modules/
+npm-debug.log
