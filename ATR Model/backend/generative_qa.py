@@ -12,8 +12,9 @@ _generator = None
 def _get_generator():
     global _generator
     if _generator is None and pipeline is not None:
-        # FLAN-T5 base is lightweight and good for instruction following
-        _generator = pipeline("text2text-generation", model="google/flan-t5-base")
+        # Use smaller default to avoid OOM; override with QA_MODEL_NAME env if needed
+        model_name = os.getenv("QA_MODEL_NAME", "google/flan-t5-small")
+        _generator = pipeline("text2text-generation", model=model_name)
     return _generator
 
 
@@ -37,7 +38,7 @@ def answer_with_context(question: str, contexts: List[str]) -> str:
         # Fallback: join top context snippet
         from textwrap import shorten
         return shorten(ctx, width=400, placeholder="...") or "I don't have enough context."
-    out = gen(prompt, max_length=192, do_sample=False, num_beams=4)
+    out = gen(prompt, max_length=160, do_sample=False, num_beams=4)
     if isinstance(out, list) and out:
         return out[0].get("generated_text", "").strip()
     return ""
