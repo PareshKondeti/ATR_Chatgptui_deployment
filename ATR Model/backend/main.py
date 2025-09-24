@@ -79,7 +79,11 @@ except Exception:
     pass
 
 # CORS configuration
-_raw_allowed = (os.getenv("ALLOWED_ORIGINS", "http://127.0.0.1:5500,http://localhost:5500") or "").strip()
+# Include Netlify frontend by default; can be overridden via ALLOWED_ORIGINS env
+_raw_allowed = (os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://127.0.0.1:5500,http://localhost:5500,https://curious-toffee-d82e94.netlify.app"
+) or "").strip()
 _list_allowed = [o.strip() for o in _raw_allowed.split(",") if o.strip()]
 
 # Special-case wildcard: FastAPI expects ["*"] to allow any origin

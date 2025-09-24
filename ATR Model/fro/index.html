@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Assistant</title>
+    <meta name="description" content="ChatGPT-like AI Assistant" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Main App Layout -->
+    <div id="appLayout" class="app-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+          <h1 class="sidebar-title">ATR</h1>
+          <button id="sidebarFoldToggle" class="sidebar-fold-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 18h18v-2H3v2zM3 13h18v-2H3v2zM3 6v2h18V6H3z"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
+          <button class="side-item side-item--active" data-panel="qa">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+            </svg>
+            <span>Chat</span>
+          </button>
+          
+          
+          
+          <button class="side-item" data-panel="record">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+            </svg>
+            <span>Record</span>
+          </button>
+          
+          <button class="side-item" data-panel="summary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14,17H7V15H14M17,13H7V11H17M17,9H7V7H17M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z"/>
+            </svg>
+            <span>Summary</span>
+          </button>
+          
+          <button class="side-item" data-panel="train">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2Z"/>
+            </svg>
+            <span>Train</span>
+          </button>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <div class="api-status">
+            <span class="badge" id="apiStatusBadge">Offline</span>
+          </div>
+          <div class="tts-toggle-wrap" title="Enable/disable browser speech">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input id="ttsToggle" type="checkbox" checked />
+              <span>Speak answers</span>
+            </label>
+          </div>
+          <button id="themeToggle" class="theme-toggle">🌓</button>
+        </div>
+      </aside>
+
+      <!-- Floating Sidebar Toggle (when collapsed) -->
+      <button id="sidebarFoldFloating" class="sidebar-fold-floating" style="display: none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 18h18v-2H3v2zM3 13h18v-2H3v2zM3 6v2h18V6H3z"/>
+        </svg>
+      </button>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Chat Panel -->
+        <div class="tabpanel tabpanel--active qa-chat chat-empty" data-panel="qa">
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <h2>ATR</h2>
+          </div>
+
+          <!-- Chat Messages -->
+          <div class="chat-messages" id="qaMessages">
+            <!-- Messages will be added here dynamically -->
+          </div>
+
+          <!-- Empty State (first-time welcome) -->
+          <div class="chat-empty-state">
+            <div class="empty-icon">💬</div>
+            <h3>How can I help you today?</h3>
+            <p>Ask me anything or upload an audio file to get started</p>
+            <div style="height:12px"></div>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+
+            </div>
+          </div>
+
+          <!-- Chat Input -->
+          <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+              <textarea 
+                id="multiPrompt" 
+                class="chat-input" 
+                placeholder="Ask anything..."
+                rows="1"
+              ></textarea>
+              <button id="multiAskBtn" class="chat-send-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- File Selection -->
+          <div class="file-selection">
+            <select id="fileSelectQa" class="file-select">
+              <option value="">All files</option>
+            </select>
+            <span id="fileSelectStatusQa" class="file-status"></span>
+          </div>
+        </div>
+
+        
+
+        <!-- Record Panel -->
+        <div class="tabpanel record-panel" data-panel="record">
+          <div class="panel-content">
+            <h2>Record Audio</h2>
+            
+            <div class="record-controls">
+              <button id="recStartBtn" class="record-btn record-btn--start">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="8"/>
+                </svg>
+                Start Recording
+              </button>
+              
+              <button id="recStopBtn" class="record-btn record-btn--stop" disabled>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="6" width="12" height="12"/>
+                </svg>
+                Stop Recording
+              </button>
+            </div>
+            
+            <div id="recStatus" class="record-status">Ready to record</div>
+            
+            <audio id="recordedPreview" controls class="audio-preview"></audio>
+            
+            <div class="interact-section">
+              <textarea id="textPrompt" class="text-input" placeholder="Or type your question here..."></textarea>
+              <button id="submitInteractBtn" class="submit-btn">Submit</button>
+              <button id="multiAskFromAudioBtn" class="submit-btn">Ask from Audio</button>
+              <div id="submitStatus" class="submit-status"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Panel -->
+        <div class="tabpanel summary-panel" data-panel="summary">
+          <div class="panel-content">
+            <h2>Summary</h2>
+            
+            <div class="summary-controls">
+              <select id="fileSelect" class="file-select">
+                <option value="">All files</option>
+              </select>
+              <span id="fileSelectStatus" class="file-status"></span>
+              
+              <button id="summarizeBtn" class="action-btn">Generate Summary</button>
+            </div>
+            
+            <div class="summary-content">
+              <textarea id="summaryBox" class="summary-text" placeholder="Summary will appear here..."></textarea>
+              <div class="summary-info">
+                <span id="summaryCount" class="char-count"></span>
+              </div>
+            </div>
+            
+            <div class="summary-actions">
+              <button id="summaryPlayBtn" class="action-btn">🎵 Play</button>
+              <button id="summaryDownloadWavBtn" class="action-btn">📥 WAV</button>
+              <button id="summaryDownloadTxtBtn" class="action-btn">📄 TXT</button>
+              <button id="summaryCopyBtn" class="action-btn">📋 Copy</button>
+              <button id="summaryClearBtn" class="action-btn">🗑️ Clear</button>
+            </div>
+            
+            <audio id="summaryAudio" controls class="audio-preview"></audio>
+        </div>
+        </div>
+
+        <!-- Training Panel -->
+        <div class="tabpanel train-panel" data-panel="train">
+          <div class="panel-content">
+            <h2>AI Training</h2>
+            
+            <!-- Upload section merged here -->
+            <div class="merged-upload">
+              <h3>Upload Audio File</h3>
+              <div id="dropArea" class="drop-area">
+                <div class="drop-content">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                  </svg>
+                  <p>Click to upload or drag and drop</p>
+                  <p class="drop-hint">MP3, WAV, M4A files supported</p>
+                </div>
+        </div>
+              <input type="file" id="audioFile" accept="audio/*" style="display: none;">
+              <div id="fileInfo" class="file-info">No file chosen.</div>
+              <audio id="uploadAudio" controls class="audio-preview"></audio>
+              <button id="uploadBtn" class="upload-btn">Upload</button>
+        </div>
+            
+            <div class="train-status">
+              <div id="trainStatus" class="status-text">Ready to train</div>
+              <div class="progress-container">
+                <div class="progress-bar">
+                  <div id="trainProgressBar" class="progress-fill"></div>
+                </div>
+                <span id="trainProgressText" class="progress-text">0%</span>
+                        </div>
+                    </div>
+            
+            <button id="startRealTrainBtn" class="action-btn action-btn--primary">Start Training</button>
+            
+            <div class="train-info">
+              <div class="info-item">
+                <label>Artifact:</label>
+                <span id="trainArtifact">—</span>
+                </div>
+                </div>
+
+            <div id="trainStages" class="train-stages">
+              <div class="stage" data-stage="prepare">
+                <div class="stage-icon">1</div>
+                <span>Prepare</span>
+              </div>
+              <div class="stage" data-stage="transcribe">
+                <div class="stage-icon">2</div>
+                <span>Transcribe</span>
+              </div>
+              <div class="stage" data-stage="chunk">
+                <div class="stage-icon">3</div>
+                <span>Chunk</span>
+              </div>
+              <div class="stage" data-stage="embed">
+                <div class="stage-icon">4</div>
+                <span>Embed</span>
+                    </div>
+              <div class="stage" data-stage="qa_setup">
+                <div class="stage-icon">5</div>
+                <span>QA Setup</span>
+                </div>
+              <div class="stage" data-stage="summary">
+                <div class="stage-icon">6</div>
+                <span>Summary</span>
+                    </div>
+              <div class="stage" data-stage="finalize">
+                <div class="stage-icon">7</div>
+                <span>Finalize</span>
+                </div>
+                </div>
+                </div>
+        </div>
+    </main>
+    </div>
+
+    <!-- Hidden elements for multi-answer functionality -->
+    <textarea id="multiCombinedAnswer" style="display: none;"></textarea>
+    <audio id="multiAnswerAudio" style="display: none;"></audio>
+    <button id="multiAnswerPlayBtn" style="display: none;"></button>
+    <button id="multiAnswerDownloadWavBtn" style="display: none;"></button>
+    <button id="multiAnswerDownloadTxtBtn" style="display: none;"></button>
+    <div id="multiResults" style="display: none;"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
