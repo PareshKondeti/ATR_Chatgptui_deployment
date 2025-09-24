@@ -38,7 +38,7 @@ def answer_with_context(question: str, contexts: List[str]) -> str:
         # Fallback: join top context snippet
         from textwrap import shorten
         return shorten(ctx, width=400, placeholder="...") or "I don't have enough context."
-    out = gen(prompt, max_length=160, do_sample=False, num_beams=4)
+    out = gen(prompt, max_new_tokens=96, do_sample=False, num_beams=4)
     if isinstance(out, list) and out:
         return out[0].get("generated_text", "").strip()
     return ""
@@ -60,7 +60,7 @@ def paraphrase_succinct(answer: str) -> str:
         "Rewrite the following answer into 1-2 concise, direct sentences, preserving factual details.\n\n"
         f"Answer: {answer}\n\nRewritten:"
     )
-    out = gen(prompt, max_length=128, do_sample=False, num_beams=4)
+    out = gen(prompt, max_new_tokens=80, do_sample=False, num_beams=4)
     if isinstance(out, list) and out:
         rewritten = out[0].get("generated_text", "").strip()
         return rewritten or answer
